@@ -87,8 +87,8 @@ app.use(bodyParser.json())
     }
   })
   app.delete('/:id', async (req, res, next) => {
-    
-  }) 
+
+  })  
 
   app.listen(3000,()=>{
     console.log(`Connected to port`)
