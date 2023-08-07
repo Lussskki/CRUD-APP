@@ -50,7 +50,7 @@ app.use(bodyParser.json())
         client.release(); // Release the client back to the pool if it exists
       }
     }
-  });
+  })
   
 
   app.listen(3001,()=>{
