@@ -24,7 +24,7 @@ app.use(bodyParser.json())
     
     try {
       const test = req.body
-      
+       
       if (!test || !test.id || !test.name || !test.lastname) {
         return res.status(400).json({ error: 'Invalid input data' })
       }
