@@ -15,8 +15,6 @@ app.use(bodyParser.json())
       res.json(result.rows)
       console.log(result.rows)
   })
-
-
   app.post('/', async (req, res, next) => {
     console.log('Post request received')
     
@@ -51,8 +49,47 @@ app.use(bodyParser.json())
       }
     }
   })
-  
+  app.put('/:id', async (req, res, next) => {
+    console.log('Put request received')
+    
+    const { id } = req.params
+    const updatedData = req.body
+    let client
+    
+    try {
+      if (!updatedData || !updatedData.name || !updatedData.lastname) {
+        return res.status(400).json({ error: 'Invalid input data' })
+      }
+      
+      client = await connection.connect() // Assign to the existing client variable
+      
+      const result = await client.query({
+        text: `UPDATE test
+               SET "name" = $1, "lastname" = $2
+               WHERE "id" = $3
+               RETURNING id;`,
+        values: [
+          updatedData.name,
+          updatedData.lastname,
+          id
+        ]
+      })
+      
 
-  app.listen(3001,()=>{
+      res.status(200).json({ message: 'Data updated successfully', updatedId: result.rows[0].id })
+    } catch (error) {
+      console.error('An error occurred:', error)
+      res.status(500).json({ error: 'Internal server error' })
+    } finally {
+      if (client) {
+        client.release() 
+      }
+    }
+  })
+  app.delete('/:id', async (req, res, next) => {
+    
+  }) 
+
+  app.listen(3000,()=>{
     console.log(`Connected to port`)
   })
