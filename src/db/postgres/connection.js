@@ -17,4 +17,4 @@ const connection = new Pool({
         console.log(error)
     }
 
-export default connection
+export default connection 
