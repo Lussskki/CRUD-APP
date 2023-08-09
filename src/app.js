@@ -87,8 +87,34 @@ app.use(bodyParser.json())
     }
   })
   app.delete('/:id', async (req, res, next) => {
+    console.log(`Delete method confirmed `)
 
-  })  
+    const { id } = req.params
+    let client;
+
+    try {
+        client = await connection.connect()
+
+        const result = await client.query({
+            text: `DELETE FROM test WHERE id = $1`,
+            values: [id]
+        })
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: `No record found with id ${id}` })
+        }
+
+        res.status(200).json({ message: `Deleted successfully` })
+    } catch (error) {
+        console.log(`An error occurred: `, error)
+        res.status(500).json({ error: `An error occurred while deleting the record` })
+    } finally {
+        if (client) {
+            client.release()
+        }
+    }
+});
+  
 
   app.listen(3000,()=>{
     console.log(`Connected to port`)
